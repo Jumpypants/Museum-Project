@@ -34,7 +34,7 @@ class Character {
     this.animation = Character.STAGES[this.stage].getAnimation(this.state).clone();
     this.targetX = x;
     this.targetY = y;
-    this.speed = 2;
+    this.speed = 1.5;
 
     this.stunned = false;
   }
