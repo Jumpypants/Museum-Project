@@ -22,9 +22,9 @@ smileyDead.src = "assets/smileyDead.png";
 
 
 var levels = [
-  new Level(6, 0, 1500, 1200, 200, 2001),
-  new Level(7, 1, 1400, 1400, 200, 2001),
-  new Level(6, 2, 1100, 900, 200, 10000000000001),
+  new Level(8, 0, 1500, 1200, 200, 1000),
+  new Level(7, 1, 1400, 1400, 200, 1000),
+  new Level(6, 2, 1100, 900, 200, 10000000000000),
 ];
 
 var intros = [
@@ -40,7 +40,6 @@ function loop() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  endGameTimer--;
   if (endGameTimer === 0) {
     ctx.fillStyle = "rgb(0, 0, 0)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -56,27 +55,6 @@ function loop() {
     ctx.font = "30px Arial";
     ctx.fillText("Reload the page to play again", canvas.width / 2, canvas.height / 2 + 50);
     return;
-  }
-
-  if (!inDialogue) { 
-    levelFailed = levels[currentLevel].tick();
-  }
-
-  // Check if all triangles are dead
-  var allDead = true;
-  for (const character of levels[currentLevel].characters) {
-    if (character.state !== "dead") {
-      allDead = false;
-      break;
-    }
-  }
-  if (allDead && endGameTimer < 0) {
-    endGameTimer = 150;
-  }
-
-  if (levels[currentLevel].timeLeft <= 0) {
-    currentLevel++;
-    levelIntro = true;
   }
 
   ctx.save();
@@ -123,6 +101,32 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
+setInterval(() => {
+  endGameTimer--;
+
+  // Check if all triangles are dead
+  var allDead = true;
+  for (const character of levels[currentLevel].characters) {
+    if (character.state !== "dead") {
+      allDead = false;
+      break;
+    }
+  }
+  if (allDead && endGameTimer < 0) {
+    endGameTimer = 100;
+  }
+
+  if (levels[currentLevel].timeLeft <= 0) {
+    currentLevel++;
+    levelIntro = true;
+  }
+
+
+  if (!inDialogue) { 
+    levelFailed = levels[currentLevel].tick();
+  }
+}, 1000 / 30);
+
 document.addEventListener("click", (event) => {
   if (inDialogue) {
     if (dialogueFinished) {
@@ -130,7 +134,7 @@ document.addEventListener("click", (event) => {
         if (currentLevel === 2 && mouseIsOnSmiley(event.clientX, event.clientY) && levels[currentLevel].killed) {
           levels[currentLevel].gunAnimation.reset();
           smileyIsDead = true;
-          endGameTimer = 150;
+          endGameTimer = 100;
         } else {
           levelFailed = false;
           levels[currentLevel].reset();

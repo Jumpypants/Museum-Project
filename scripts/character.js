@@ -34,7 +34,7 @@ class Character {
     this.animation = Character.STAGES[this.stage].getAnimation(this.state).clone();
     this.targetX = x;
     this.targetY = y;
-    this.speed = 1.5;
+    this.speed = 3.5;
 
     this.stunned = false;
   }
@@ -55,7 +55,7 @@ class Character {
             this.targetY < borderY + Character.SIZES[this.size].height / 2 || 
             this.targetY > borderY + borderH - Character.SIZES[this.size].height / 2
           );
-        } else if (Math.random() < 0.0011 * (this.stunned ? 2 : 1)) {
+        } else if (Math.random() < 0.0014 * (this.stunned ? 2 : 1)) {
           this.setState('bolt');
           // pick a random target outside the border
           do {
